@@ -1,9 +1,12 @@
 import express from "express";
 
 import { handlerReadiness } from "./api/readiness.js";
+import { logResponses } from "./api/middleware.js";
 
 const app = express();
 const PORT = 8080;
+
+app.use(logResponses);
 
 app.use("/app", express.static("./src/app"));
 
