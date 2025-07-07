@@ -1,6 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
+import config from "../config.js";
 
-export function logResponses(req: Request, res: Response, next: NextFunction) {
+export function middlewareLogResponse(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   res.on("finish", () => {
     if (res.statusCode >= 300) {
       console.log(
@@ -8,5 +13,14 @@ export function logResponses(req: Request, res: Response, next: NextFunction) {
       );
     }
   });
+  next();
+}
+
+export function middlewareMetricsInc(
+  _req: Request,
+  _res: Response,
+  next: NextFunction
+) {
+  config.fileserverHits++;
   next();
 }
