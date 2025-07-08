@@ -1,5 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
 import config from "../config.js";
+import { respondWithError } from "./json.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  UserForbiddenError,
+  UserNotAuthenticatedError,
+} from "./errors.js";
 
 export function middlewareLogResponse(
   req: Request,
@@ -7,30 +14,51 @@ export function middlewareLogResponse(
   next: NextFunction
 ) {
   res.on("finish", () => {
-    if (res.statusCode >= 300) {
-      console.log(
-        `[NON-OK] ${req.method} ${req.url} - Status: ${res.statusCode}`
-      );
+    const statusCode = res.statusCode;
+
+    if (statusCode >= 300) {
+      console.log(`[NON-OK] ${req.method} ${req.url} - Status: ${statusCode}`);
     }
   });
+
   next();
 }
 
 export function middlewareMetricsInc(
-  _req: Request,
-  _res: Response,
+  _: Request,
+  __: Response,
   next: NextFunction
 ) {
   config.fileserverHits++;
   next();
 }
 
-export function errorMiddleware(
+export function errorMiddleWare(
   err: Error,
-  _req: Request,
+  _: Request,
   res: Response,
-  _next: NextFunction
+  __: NextFunction
 ) {
-  console.error(err.message);
-  res.status(500).json({ error: "Something went wrong on our end" });
+  let statusCode = 500;
+  let message = "Something went wrong on our end";
+
+  if (err instanceof BadRequestError) {
+    statusCode = 400;
+    message = err.message;
+  } else if (err instanceof UserNotAuthenticatedError) {
+    statusCode = 401;
+    message = err.message;
+  } else if (err instanceof UserForbiddenError) {
+    statusCode = 403;
+    message = err.message;
+  } else if (err instanceof NotFoundError) {
+    statusCode = 404;
+    message = err.message;
+  }
+
+  if (statusCode >= 500) {
+    console.log(err.message);
+  }
+
+  respondWithError(res, statusCode, message);
 }
