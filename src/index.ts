@@ -14,6 +14,7 @@ const app = express();
 const PORT = 8080;
 
 app.use(middlewareLogResponse);
+app.use(express.json());
 app.use("/app", middlewareMetricsInc);
 app.use("/app", express.static("./src/app"));
 
