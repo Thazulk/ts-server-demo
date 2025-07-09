@@ -4,6 +4,7 @@
   "description": "A demo of a simple HTTP server written in TypeScript, Node.js, and Express.",
   "type": "module",
   "scripts": {
+    "check": "tsc --noEmit",
     "build": "npx tsc",
     "start": "node dist/index.js",
     "dev": "npx tsc && node dist/index.js",
