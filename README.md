@@ -1,2 +1,3 @@
 # ts-server-demo
-Bootdev TS server project
+
+Based on the Boot.dev HTTP Server guided project using Node.js, Typescript, Express, Drizzle, Postgresql
