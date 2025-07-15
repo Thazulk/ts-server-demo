@@ -11,7 +11,11 @@ import {
   middlewareLogResponse,
   middlewareMetricsInc,
 } from "./api/middleware.js";
-import { handlerChirpsCreate, handlerChirpsGet } from "./api/chirps.js";
+import {
+  handlerChirpsCreate,
+  handlerChirpsGet,
+  handlerChirpsGetById,
+} from "./api/chirps.js";
 import { config } from "./config.js";
 import { handlerUsersCreate } from "./api/users.js";
 
@@ -48,6 +52,11 @@ app.post("/api/chirps", (req, res, next) => {
 //Get all chirps
 app.get("/api/chirps", (req, res, next) => {
   Promise.resolve(handlerChirpsGet(req, res)).catch(next);
+});
+
+//Get a chirp
+app.get("/api/chirps/:chirpID", (req, res, next) => {
+  Promise.resolve(handlerChirpsGetById(req, res)).catch(next);
 });
 
 app.use(errorMiddleWare);
