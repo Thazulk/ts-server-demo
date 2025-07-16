@@ -8,7 +8,7 @@ export async function validateChirp(chirp: string) {
   const maxChirpLength = 140;
   if (chirp.length > maxChirpLength) {
     throw new BadRequestError(
-      `Chirp is too long. Max length is ${maxChirpLength}`
+      `Chirp is too long. Max length is ${maxChirpLength}`,
     );
   }
 
@@ -45,7 +45,7 @@ export async function handlerChirpsCreate(req: Request, res: Response) {
   respondWithJSON(res, 201, chirp);
 }
 
-export async function handlerChirpsGet(req: Request, res: Response) {
+export async function handlerChirpsGet(_req: Request, res: Response) {
   const chirps = await getChirps();
   respondWithJSON(res, 200, chirps);
 }
